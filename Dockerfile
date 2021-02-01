@@ -11,6 +11,8 @@ RUN npm run build
 
 # A phase can only have one FROM command
 FROM nginx
+# This usually does not matter, but when using CI in e.g. BeansTalk, this is what gets exposed.
+EXPOSE 80
 # This happens to be the directory that nginx serves as default
 COPY --from=builder /app/build /usr/share/nginx/html
 
