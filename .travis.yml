@@ -4,8 +4,24 @@ language: generic
 services: 
     - docker
 
+# This is done before anything is run
 before_install:
     - docker build -t alehti/docker-react -f Dockerfile.dev .
 
 script:
     - docker run -e CI=true alehti/docker-react npm run test
+
+deploy:
+    # There are many built-in supports for different providers
+    provider: elasticbeanstalk
+    region: "us-east-2"
+    app: "docker-react"
+    env: "Dockerreact-env"
+    bucket_name: "elasticbeanstalk-us-east-2-839912558253"
+    bucket_path: "docker-react" # There will be a folder with this name created
+    # Whenever something is pushed into this branch, then deploy
+    on:
+        branch: master
+    # If you need to use Travis CI secret keys, go and add them as environment variables in the Travis CI UI.
+    access_key_id: $AWS_ACCESS_KEY
+    secret_access_key: $AWS_SECRET_KEY
